@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
-
-const API_URL = 'http://localhost:5000'
+import { API_URL } from '../config'
 
 function ProductList() {
   const [products, setProducts] = useState([])
