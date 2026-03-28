@@ -42,6 +42,18 @@ router.post('/', async (req, res) => {
     }
 });
 
+// GET /order - Get all orders
+router.get('/', async (req, res) => {
+    try {
+        const [orders] = await db.query(
+            'SELECT * FROM orders ORDER BY created_at DESC'
+        );
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // GET /order/:id - Get order details (bonus)
 router.get('/:id', async (req, res) => {
     try {

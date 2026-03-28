@@ -39,6 +39,9 @@ function Navbar() {
           <Link className="nav-link" to="/">
             Products
           </Link>
+          <Link className="nav-link" to="/orders">
+            📦 Orders
+          </Link>
           <Link className="nav-link" to="/cart">
             🛒 Cart
           </Link>
