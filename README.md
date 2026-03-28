@@ -164,6 +164,10 @@ The app comes with 12 sample products across 4 categories:
 - Books (JavaScript Guide, Design Patterns)
 
 ## Screenshots
+<img width="1894" height="871" alt="image" src="https://github.com/user-attachments/assets/c4234080-5309-44f0-adf4-bb64f6b69503" />
+<img width="1917" height="650" alt="image" src="https://github.com/user-attachments/assets/19b17fc8-945a-4c08-a4a6-2f813130f351" />
+<img width="1901" height="458" alt="image" src="https://github.com/user-attachments/assets/ab762ef5-548e-4f88-9e1a-66b0f7197afa" />
+<img width="1909" height="728" alt="image" src="https://github.com/user-attachments/assets/f54df0fb-01d9-45b6-b0d6-a28a245b2faa" />
 
 ### Product Listing
 - Grid layout of products
