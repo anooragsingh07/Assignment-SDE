@@ -1,14 +1,33 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Navbar() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [cartCount, setCartCount] = useState(0)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // Fetch cart count on mount and when location changes
+  useEffect(() => {
+    fetchCartCount()
+  }, [location])
+
+  const fetchCartCount = async () => {
+    try {
+      const response = await fetch(`${API_URL}/cart`)
+      const data = await response.json()
+      // Calculate total items in cart
+      const totalItems = data.reduce((sum, item) => sum + item.quantity, 0)
+      setCartCount(totalItems)
+    } catch (error) {
+      console.error('Error fetching cart:', error)
+    }
+  }
 
   // Handle search form submission
   const handleSearch = (e) => {
     e.preventDefault()
-    // Navigate to home with search query
     navigate(`/?search=${searchTerm}`)
   }
 
@@ -17,7 +36,7 @@ function Navbar() {
       <div className="container-fluid">
         {/* Logo */}
         <Link className="navbar-brand" to="/">
-          ShopKart
+          🛍️ ShopKart
         </Link>
 
         {/* Search Bar */}
@@ -35,15 +54,18 @@ function Navbar() {
         </form>
 
         {/* Navigation Links */}
-        <div className="d-flex">
+        <div className="d-flex align-items-center">
           <Link className="nav-link" to="/">
-            Products
+            🏠 Home
           </Link>
           <Link className="nav-link" to="/orders">
             📦 Orders
           </Link>
-          <Link className="nav-link" to="/cart">
+          <Link className="nav-link cart-link" to="/cart">
             🛒 Cart
+            {cartCount > 0 && (
+              <span className="cart-count">{cartCount}</span>
+            )}
           </Link>
         </div>
       </div>

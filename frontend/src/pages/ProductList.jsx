@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import { API_URL } from '../config'
 
@@ -9,6 +9,7 @@ function ProductList() {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [loading, setLoading] = useState(true)
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
 
   // Get search term from URL
   const searchTerm = searchParams.get('search') || ''
@@ -52,8 +53,21 @@ function ProductList() {
     setSelectedCategory(e.target.value)
   }
 
+  // Force navbar to refresh cart count
+  const handleCartUpdate = () => {
+    // Navigate to same page to trigger useEffect in Navbar
+    navigate(window.location.pathname + window.location.search)
+  }
+
   if (loading) {
-    return <div className="text-center mt-5">Loading products...</div>
+    return (
+      <div className="text-center mt-5">
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading products...</p>
+      </div>
+    )
   }
 
   return (
@@ -61,7 +75,7 @@ function ProductList() {
       {/* Sidebar - Category Filter */}
       <div className="col-md-3">
         <div className="category-filter">
-          <h5>Filter by Category</h5>
+          <h5>🏷️ Filter by Category</h5>
           <select
             className="form-select"
             value={selectedCategory}
@@ -75,21 +89,35 @@ function ProductList() {
             ))}
           </select>
         </div>
+
+        {/* Quick Stats */}
+        <div className="category-filter">
+          <h5>📊 Products</h5>
+          <p className="mb-0 text-muted">{products.length} items found</p>
+        </div>
       </div>
 
       {/* Product Grid */}
       <div className="col-md-9">
         {searchTerm && (
-          <h4 className="mb-3">Search results for: "{searchTerm}"</h4>
+          <div className="mb-3 p-3 bg-white rounded-3 border">
+            <h5 className="mb-0">🔍 Search results for: "{searchTerm}"</h5>
+          </div>
         )}
 
         {products.length === 0 ? (
-          <p>No products found.</p>
+          <div className="text-center mt-5 p-4 bg-white rounded-3">
+            <h4>😕 No products found</h4>
+            <p className="text-muted">Try a different search or category</p>
+          </div>
         ) : (
           <div className="row">
             {products.map(product => (
-              <div key={product.id} className="col-md-4 col-sm-6">
-                <ProductCard product={product} />
+              <div key={product.id} className="col-lg-4 col-md-6 col-sm-6">
+                <ProductCard 
+                  product={product} 
+                  onCartUpdate={handleCartUpdate}
+                />
               </div>
             ))}
           </div>

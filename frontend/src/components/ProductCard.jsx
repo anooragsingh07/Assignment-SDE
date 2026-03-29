@@ -1,11 +1,17 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config'
 
-function ProductCard({ product }) {
+function ProductCard({ product, onCartUpdate }) {
   const navigate = useNavigate()
+  const [isAdding, setIsAdding] = useState(false)
+  const [showAdded, setShowAdded] = useState(false)
 
   // Add product to cart
-  const addToCart = async () => {
+  const addToCart = async (e) => {
+    e.stopPropagation()
+    setIsAdding(true)
+    
     try {
       await fetch(`${API_URL}/cart`, {
         method: 'POST',
@@ -15,14 +21,30 @@ function ProductCard({ product }) {
           quantity: 1
         })
       })
-      alert('Added to cart!')
+      
+      // Show success feedback
+      setShowAdded(true)
+      setTimeout(() => setShowAdded(false), 2000)
+      
+      // Trigger navbar refresh
+      if (onCartUpdate) onCartUpdate()
+      
     } catch (error) {
       console.error('Error adding to cart:', error)
     }
+    
+    setIsAdding(false)
   }
 
   return (
     <div className="product-card">
+      {/* Success Badge */}
+      {showAdded && (
+        <div className="text-center mb-2">
+          <span className="badge bg-success">✓ Added to Cart!</span>
+        </div>
+      )}
+      
       {/* Product Image */}
       <img
         src={product.image_url}
@@ -41,12 +63,21 @@ function ProductCard({ product }) {
 
       {/* Product Price */}
       <p className="product-price">
-        ${product.price}
+        ${Number(product.price).toFixed(2)}
+      </p>
+
+      {/* Stock Status */}
+      <p className="mb-2">
+        <small className="text-success">✓ In Stock</small>
       </p>
 
       {/* Add to Cart Button */}
-      <button className="btn btn-amazon w-100" onClick={addToCart}>
-        Add to Cart
+      <button 
+        className="btn btn-amazon w-100" 
+        onClick={addToCart}
+        disabled={isAdding}
+      >
+        {isAdding ? 'Adding...' : '🛒 Add to Cart'}
       </button>
     </div>
   )
