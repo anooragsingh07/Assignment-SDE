@@ -58,9 +58,11 @@ function ProductDetail() {
   return (
     <div className="product-detail">
       <div className="row">
-        {/* Product Image */}
+        {/* Product image — rounded frame */}
         <div className="col-md-5 text-center">
-          <img src={product.image_url} alt={product.name} />
+          <div className="product-detail-image-wrap">
+            <img src={product.image_url} alt={product.name} />
+          </div>
         </div>
 
         {/* Product Info */}

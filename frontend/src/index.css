@@ -115,17 +115,30 @@ body {
   transform: translateY(-4px);
 }
 
-.product-card img {
+/* Rounded image frame — clips product photos to soft corners */
+.product-card-image-wrap {
   width: 100%;
   height: 200px;
-  object-fit: contain;
   margin-bottom: 16px;
-  border-radius: 8px;
-  transition: transform 0.3s;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f3f4f6;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
 
-.product-card:hover img {
-  transform: scale(1.05);
+.product-card:hover .product-card-image-wrap {
+  transform: scale(1.03);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.product-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 20px;
 }
 
 .product-card .product-name {
@@ -209,13 +222,23 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.cart-item img {
+.cart-item-img-wrap {
+  flex-shrink: 0;
   width: 140px;
   height: 140px;
-  object-fit: contain;
-  border-radius: 8px;
-  background: #f7f7f7;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f3f4f6;
   padding: 8px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.cart-item-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 14px;
 }
 
 /* Checkout & Order Summary - Enhanced */
@@ -264,13 +287,23 @@ body {
   border: 1px solid #e3e3e3;
 }
 
-.product-detail img {
+.product-detail-image-wrap {
+  display: inline-block;
   max-width: 400px;
-  max-height: 400px;
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #f3f4f6;
+  padding: 24px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.product-detail-image-wrap img {
+  width: 100%;
+  max-height: 360px;
   object-fit: contain;
-  border-radius: 12px;
-  background: #f7f7f7;
-  padding: 20px;
+  display: block;
+  border-radius: 16px;
 }
 
 .product-detail h2 {
@@ -364,9 +397,9 @@ h4 {
     padding: 20px;
   }
 
-  .product-detail img {
+  .product-detail-image-wrap {
     max-width: 100%;
-    padding: 12px;
+    padding: 16px;
   }
 
   .cart-item {
@@ -374,8 +407,8 @@ h4 {
     text-align: center;
   }
 
-  .cart-item img {
-    margin-bottom: 16px;
+  .cart-item-img-wrap {
+    margin: 0 auto 16px;
   }
 }
 

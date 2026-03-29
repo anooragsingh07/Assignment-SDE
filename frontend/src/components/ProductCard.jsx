@@ -45,13 +45,16 @@ function ProductCard({ product, onCartUpdate }) {
         </div>
       )}
       
-      {/* Product Image */}
-      <img
-        src={product.image_url}
-        alt={product.name}
+      {/* Product image — rounded frame clips square photos */}
+      <div
+        className="product-card-image-wrap"
         onClick={() => navigate(`/product/${product.id}`)}
-        style={{ cursor: 'pointer' }}
-      />
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && navigate(`/product/${product.id}`)}
+      >
+        <img src={product.image_url} alt={product.name} />
+      </div>
 
       {/* Product Name */}
       <h5

@@ -83,7 +83,9 @@ function Cart() {
         {cartItems.map(item => (
           <div key={item.id} className="cart-item d-flex align-items-center">
             {/* Product Image */}
-            <img src={item.image_url} alt={item.name} className="me-4" />
+            <div className="cart-item-img-wrap me-4">
+              <img src={item.image_url} alt={item.name} />
+            </div>
 
             {/* Product Details */}
             <div className="flex-grow-1">
