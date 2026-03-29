@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams, useNavigate, Link } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import { API_URL } from '../config'
 
@@ -71,20 +71,11 @@ function ProductList() {
   }
 
   return (
-    <>
-      <nav className="amazon-breadcrumb mb-3" aria-label="Breadcrumb">
-        <Link to="/">ShopKart</Link>
-        <span className="amazon-breadcrumb-sep">›</span>
-        <span>
-          {searchTerm ? `Results for "${searchTerm}"` : 'Home'}
-        </span>
-      </nav>
-
     <div className="row">
       {/* Sidebar - Category Filter */}
       <div className="col-md-3">
-        <div className="category-filter amazon-sidebar-card">
-          <h5 className="amazon-sidebar-title">Department</h5>
+        <div className="category-filter">
+          <h5>🏷️ Filter by Category</h5>
           <select
             className="form-select"
             value={selectedCategory}
@@ -100,19 +91,17 @@ function ProductList() {
         </div>
 
         {/* Quick Stats */}
-        <div className="category-filter amazon-sidebar-card">
-          <h5 className="amazon-sidebar-title">Results</h5>
-          <p className="mb-0 amazon-muted">{products.length} items</p>
+        <div className="category-filter">
+          <h5>📊 Products</h5>
+          <p className="mb-0 text-muted">{products.length} items found</p>
         </div>
       </div>
 
       {/* Product Grid */}
       <div className="col-md-9">
         {searchTerm && (
-          <div className="amazon-results-banner mb-3">
-            <h1 className="amazon-results-title h5 mb-0">
-              Results for <span className="amazon-highlight">&quot;{searchTerm}&quot;</span>
-            </h1>
+          <div className="mb-3 p-3 bg-white rounded-3 border">
+            <h5 className="mb-0">🔍 Search results for: "{searchTerm}"</h5>
           </div>
         )}
 
@@ -135,7 +124,6 @@ function ProductList() {
         )}
       </div>
     </div>
-    </>
   )
 }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { API_URL } from '../config'
 
 function ProductDetail() {
@@ -8,6 +8,7 @@ function ProductDetail() {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  // Fetch product details on component mount
   useEffect(() => {
     fetchProduct()
   }, [id])
@@ -23,6 +24,7 @@ function ProductDetail() {
     setLoading(false)
   }
 
+  // Add product to cart
   const addToCart = async () => {
     try {
       await fetch(`${API_URL}/cart`, {
@@ -39,142 +41,70 @@ function ProductDetail() {
     }
   }
 
+  // Buy now - add to cart and go to checkout
   const buyNow = async () => {
-    try {
-      await fetch(`${API_URL}/cart`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          product_id: product.id,
-          quantity: 1
-        })
-      })
-      navigate('/checkout')
-    } catch (error) {
-      console.error('Error adding to cart:', error)
-    }
+    await addToCart()
+    navigate('/checkout')
   }
 
   if (loading) {
-    return <div className="text-center mt-5 amazon-muted">Loading...</div>
+    return <div className="text-center mt-5">Loading...</div>
   }
 
   if (!product) {
     return <div className="text-center mt-5">Product not found</div>
   }
 
-  const price = Number(product.price)
-  const dollars = Math.floor(price)
-  const cents = Math.round((price - dollars) * 100).toString().padStart(2, '0')
-  const demoRating = (4.1 + (product.id % 9) * 0.1).toFixed(1)
-
   return (
-    <>
-      <nav className="amazon-breadcrumb mb-3" aria-label="Breadcrumb">
-        <Link to="/">ShopKart</Link>
-        <span className="amazon-breadcrumb-sep">›</span>
-        <Link to="/">{product.category}</Link>
-        <span className="amazon-breadcrumb-sep">›</span>
-        <span className="amazon-breadcrumb-current">{product.name}</span>
-      </nav>
-
-      <div className="product-detail amazon-pdp">
-        <div className="row g-4">
-          <div className="col-lg-5 text-center">
-            <div className="product-detail-image-wrap">
-              <img src={product.image_url} alt={product.name} />
-            </div>
+    <div className="product-detail">
+      <div className="row">
+        {/* Product image — rounded frame */}
+        <div className="col-md-5 text-center">
+          <div className="product-detail-image-wrap">
+            <img src={product.image_url} alt={product.name} />
           </div>
+        </div>
 
-          <div className="col-lg-4">
-            <h1 className="amazon-pdp-title h4">{product.name}</h1>
-            <div className="amazon-stars-row mb-2" id="reviews">
-              <span className="amazon-stars">★★★★☆</span>
-              <span className="amazon-rating-link">{demoRating} out of 5</span>
-            </div>
-            <hr className="amazon-divider" />
-            <div className="amazon-price-block amazon-pdp-price mb-3">
-              <span className="amazon-price-label">Price:</span>
-              <span className="amazon-price-symbol">$</span>
-              <span className="amazon-price-whole">{dollars}</span>
-              <span className="amazon-price-fraction">{cents}</span>
-            </div>
-            <p className="amazon-delivery-line mb-2">
-              <span className="amazon-delivery-green">FREE delivery</span>
-              {' '}
-              <span className="amazon-delivery-date">on orders over $25</span>
-            </p>
-            <p className="mb-2">
-              <strong className="amazon-label">Category:</strong>{' '}
-              <Link to="/" className="amazon-inline-link">{product.category}</Link>
-            </p>
-            <p className="mb-3">
-              <strong className="amazon-label">Availability:</strong>{' '}
-              {product.stock > 0 ? (
-                <span className="text-success">In Stock ({product.stock} left)</span>
-              ) : (
-                <span className="text-danger">Out of Stock</span>
-              )}
-            </p>
-            <div className="amazon-about-item">
-              <h2 className="h6 amazon-about-heading">About this item</h2>
-              <ul className="amazon-bullet-list">
-                <li>{product.description}</li>
-                <li>Sold and shipped by ShopKart (demo store).</li>
-              </ul>
-            </div>
-          </div>
+        {/* Product Info */}
+        <div className="col-md-7">
+          <h2>{product.name}</h2>
+          
+          <hr />
+          
+          <p className="h3 text-danger mb-3">
+            ${product.price}
+          </p>
 
-          <div className="col-lg-3">
-            <div className="amazon-buy-box">
-              <div className="amazon-price-block mb-3">
-                <span className="amazon-price-symbol">$</span>
-                <span className="amazon-price-whole">{dollars}</span>
-                <span className="amazon-price-fraction">{cents}</span>
-              </div>
-              <p className="amazon-delivery-line small mb-3">
-                <span className="amazon-delivery-green">FREE delivery</span>
-                {' '}
-                <span className="amazon-delivery-date">on orders over $25</span>
-              </p>
-              <p className="amazon-stock-in mb-3">
-                {product.stock > 0 ? (
-                  <span className="text-success fw-semibold">In Stock.</span>
-                ) : (
-                  <span className="text-danger">Unavailable.</span>
-                )}
-              </p>
-              <button
-                type="button"
-                className="btn btn-amazon w-100 mb-2 amazon-add-btn"
-                onClick={addToCart}
-                disabled={product.stock <= 0}
-              >
-                Add to Cart
-              </button>
-              <button
-                type="button"
-                className="btn btn-buy-now w-100 mb-3"
-                onClick={buyNow}
-                disabled={product.stock <= 0}
-              >
-                Buy Now
-              </button>
-              <div className="amazon-seller-block">
-                <p className="small mb-1">
-                  <span className="amazon-muted">Ships from </span>
-                  <strong>ShopKart</strong>
-                </p>
-                <p className="small mb-0">
-                  <span className="amazon-muted">Sold by </span>
-                  <strong>ShopKart</strong>
-                </p>
-              </div>
-            </div>
+          <p className="mb-3">
+            <strong>Category:</strong> {product.category}
+          </p>
+
+          <p className="mb-3">
+            <strong>Stock:</strong>{' '}
+            {product.stock > 0 ? (
+              <span className="text-success">In Stock ({product.stock} available)</span>
+            ) : (
+              <span className="text-danger">Out of Stock</span>
+            )}
+          </p>
+
+          <p className="mb-4">
+            <strong>Description:</strong><br />
+            {product.description}
+          </p>
+
+          {/* Action Buttons */}
+          <div className="d-flex gap-3">
+            <button className="btn btn-amazon btn-lg" onClick={addToCart}>
+              Add to Cart
+            </button>
+            <button className="btn btn-buy-now btn-lg" onClick={buyNow}>
+              Buy Now
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

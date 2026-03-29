@@ -8,6 +8,7 @@ function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
+  // Fetch cart count on mount and when location changes
   useEffect(() => {
     fetchCartCount()
   }, [location])
@@ -16,6 +17,7 @@ function Navbar() {
     try {
       const response = await fetch(`${API_URL}/cart`)
       const data = await response.json()
+      // Calculate total items in cart
       const totalItems = data.reduce((sum, item) => sum + item.quantity, 0)
       setCartCount(totalItems)
     } catch (error) {
@@ -23,110 +25,51 @@ function Navbar() {
     }
   }
 
+  // Handle search form submission
   const handleSearch = (e) => {
     e.preventDefault()
-    const q = searchTerm.trim()
-    if (q) navigate(`/?search=${encodeURIComponent(q)}`)
-    else navigate('/')
+    navigate(`/?search=${searchTerm}`)
   }
 
   return (
-    <header className="amazon-header">
-      {/* Row 1 — logo, deliver, search, account, cart */}
-      <div className="amazon-nav-main">
-        <Link className="amazon-logo" to="/" title="ShopKart Home">
-          <span className="amazon-logo-text">Shop</span>
-          <span className="amazon-logo-accent">Kart</span>
-          <span className="amazon-logo-smile" aria-hidden />
+    <nav className="navbar navbar-expand-lg">
+      <div className="container-fluid">
+        {/* Logo */}
+        <Link className="navbar-brand" to="/">
+          🛍️ ShopKart
         </Link>
 
-        <button
-          type="button"
-          className="amazon-deliver"
-          onClick={() => navigate('/')}
-          aria-label="Choose delivery location"
-        >
-          <span className="amazon-deliver-icon" aria-hidden>📍</span>
-          <span className="amazon-deliver-text">
-            <span className="amazon-deliver-line1">Deliver to</span>
-            <span className="amazon-deliver-line2">India</span>
-          </span>
-        </button>
-
-        <form className="amazon-search" onSubmit={handleSearch}>
-          <div className="amazon-search-inner">
-            <label htmlFor="nav-search" className="visually-hidden">
-              Search ShopKart
-            </label>
-            <span className="amazon-search-all" aria-hidden>
-              All
-            </span>
-            <input
-              id="nav-search"
-              type="search"
-              className="amazon-search-input"
-              placeholder="Search ShopKart"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              autoComplete="off"
-            />
-            <button type="submit" className="amazon-search-btn" aria-label="Search">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path
-                  d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Zm0-2a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"
-                  fill="#333"
-                />
-                <path
-                  d="m20 20-4.2-4.2"
-                  stroke="#333"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          </div>
+        {/* Search Bar */}
+        <form className="d-flex search-bar" onSubmit={handleSearch}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button type="submit">
+            🔍
+          </button>
         </form>
 
-        <div className="amazon-nav-tools">
-          <Link className="amazon-nav-block" to="/">
-            <span className="amazon-nav-line1">Hello, guest</span>
-            <span className="amazon-nav-line2">Account &amp; Lists</span>
+        {/* Navigation Links */}
+        <div className="d-flex align-items-center">
+          <Link className="nav-link" to="/">
+            🏠 Home
           </Link>
-          <Link className="amazon-nav-block" to="/orders">
-            <span className="amazon-nav-line1">Returns</span>
-            <span className="amazon-nav-line2">&amp; Orders</span>
+          <Link className="nav-link" to="/orders">
+            📦 Orders
           </Link>
-          <Link className="amazon-cart-block" to="/cart">
-            <div className="amazon-cart-inner">
-              <span className="amazon-cart-count" aria-live="polite">
-                {cartCount}
-              </span>
-              <span className="amazon-cart-icon" aria-hidden>
-                🛒
-              </span>
-            </div>
-            <span className="amazon-cart-label">Cart</span>
+          <Link className="nav-link cart-link" to="/cart">
+            🛒 Cart
+            {cartCount > 0 && (
+              <span className="cart-count">{cartCount}</span>
+            )}
           </Link>
         </div>
       </div>
-
-      {/* Row 2 — department strip */}
-      <nav className="amazon-nav-sub" aria-label="Browse categories">
-        <button type="button" className="amazon-all-btn" onClick={() => navigate('/')}>
-          <span className="amazon-hamburger" aria-hidden>
-            ☰
-          </span>
-          All
-        </button>
-        <button type="button" className="amazon-sub-link" onClick={() => navigate('/')}>
-          Today&apos;s Deals
-        </button>
-        <Link to="/">Customer Service</Link>
-        <Link to="/">Registry</Link>
-        <Link to="/">Gift Cards</Link>
-        <Link to="/">Sell</Link>
-      </nav>
-    </header>
+    </nav>
   )
 }
 
