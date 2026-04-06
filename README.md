@@ -191,3 +191,4 @@ The app comes with 12 sample products across 4 categories:
 ## Author
 
 Anoorag Singh
+https://www.linkedin.com/in/anooragsingh/
